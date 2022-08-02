@@ -11,16 +11,28 @@
   <section class="w-100 p-4 d-flex justify-content-center pb-4">
     <form style="width: 22rem;">
       <div class="form-outline mb-4">
-        <input type="email" id="form2Example1" class="form-control">
-        <label class="form-label" for="form2Example1" style="margin-left: 0px;">Никнейм</label>
+        <input class="form-control" name="username" [(ngModel)]="signupInfo.username">
+        <label class="form-label" style="margin-left: 0px;">Никнейм</label>
         <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 88.8px;"></div><div class="form-notch-trailing"></div></div></div>
 
       <div class="form-outline mb-4">
-        <input type="password" id="form2Example2" class="form-control">
+        <input type="password" class="form-control" name="password" [(ngModel)]="signupInfo.password">
         <label class="form-label" for="form2Example2" style="margin-left: 0px;">Пароль</label>
-        <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div></div>
+      </div>
 
-      <button type="button" class="btn btn-primary btn-block mb-4">Регистрация</button>
+      <div class="form-notch">
+        <div class="form-notch-leading" style="width: 9px;">
+        </div>
+        <div class="form-notch-middle" style="width: 64px;">
+        </div>
+      </div>
+
+      <div class="form-outline mb-4">
+        <input id="form2Example2" class="form-control" name="password" placeholder="Два слова обо мне" [(ngModel)]="signupInfo.description">
+      </div>
+
+
+      <button (click)="onSubmit()" type="button" class="btn btn-outline-dark btn-block mb-4">Регистрация</button>
     </form>
   </section>
 

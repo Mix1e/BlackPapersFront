@@ -1,13 +1,13 @@
 import {Pipe, PipeTransform} from "@angular/core";
-import {Paper} from "../../interfaces/paper";
+import {Viewer} from "../../interfaces/viewer";
 
 @Pipe({
   name: 'searchViewers'
 })
 export class SearchViewersPipe implements PipeTransform{
-  transform(papers: Paper[], value: any): any {
-    return papers.filter(paper => {
-      return paper.name.includes(value)
+  transform(viewers: Viewer[], value: any): any {
+    return viewers.filter(viewer => {
+      return viewer.nickName.includes(value)
     });
   }
 }

@@ -5,8 +5,6 @@ export interface Viewer {
 
   nickName:string;
   password:string;
-  role:string;
   description:string;
-  comments:Comment[] | undefined;
-  papers:Paper[] | undefined;
+  role: string;
 }

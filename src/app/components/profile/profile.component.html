@@ -1,1 +1,38 @@
-<p>profile works!</p>
+<div *ngIf="username; else unauthorized">
+<section class="bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 px-xl-10">
+        <div class="bg-secondary d-lg-inline-block py-1-9 px-1-9 px-sm-6 mb-1-9 rounded">
+          <h3 class="h2 text-white mb-0">{{viewer.nickName}}</h3>
+          <span class="text-primary">{{viewer.role}}</span>
+        </div>
+      </div>
+      <div class="col-lg-12 mb-4 mb-sm-5">
+        <div>
+          <div class="row">
+            <span class="section-title text-primary mb-3 mb-sm-4 col">Обо мне</span>
+            <div class="container-fluid text-end m-4 col" *ngIf="viewer.nickName === username">
+              <button type="button" class="btn btn-outline-success" (click)="saveDescription()">Сохранить</button>
+            </div>
+          </div>
+          <div class="input-group mb-3" *ngIf="viewer.nickName === username;else readOnly">
+            <textarea class="form-control" aria-label="С текстовым полем" placeholder="Информация обо мне" (input)="viewer.description" [(ngModel)]="viewer.description"></textarea>
+          </div>
+          <ng-template #readOnly>
+            <textarea readonly class="form-control" aria-label="С текстовым полем" placeholder="Пусто.." [(ngModel)]="viewer.description"></textarea>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<ng-template #unauthorized>
+  <section class="py-4 text-center container">
+    <h3>Необходиомо авторизоваться</h3>
+    <p class="lead text-muted">Чтобы зайти в профиль</p>
+  </section>
+  <app-login></app-login>
+</ng-template>

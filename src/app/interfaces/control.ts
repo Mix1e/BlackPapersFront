@@ -1,12 +1,10 @@
 import {Paper} from "./paper";
 import {Viewer} from "./viewer";
 
-export interface Comment {
+export interface Control {
 
   id: number;
   paper: Paper;
-  content: string;
-  likes: number;
-  dateOfUpdate: Date;
   viewer: Viewer;
+  liked: boolean;
 }

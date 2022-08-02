@@ -1,1 +1,41 @@
-<p>viewers works!</p>
+<div *ngIf="username; else unauthorized">
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Пользователи мои пользователи</h1>
+      <p class="lead text-muted">Это немного, но это честная работа</p>
+    </div>
+  </div>
+</section>
+
+<section class="w-200 p-4 d-flex justify-content-center">
+  <div class="form-outline" style="width: 32rem;">
+    <input type="search" class="form-control form-control-dark text-black bg-white" placeholder="Поиск по нику" aria-label="Search" [(ngModel)]="searchViewersStr">
+    <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div>
+    </div></div>
+</section>
+<div class="container marketing">
+  <div class="row row-cols-lg-auto align-items-stretch">
+    <div *ngFor="let viewer of viewers | searchViewers:searchViewersStr">
+    <div class="col-lg-4 m-4">
+      <a [routerLink]="['/viewers', viewer.nickName]" class="pull-left col">
+        <img width="140" height="140" src="https://school2skopin.ru/wp-content/uploads/2021/08/unnamed.jpg" alt="" class="img-circle">
+        <h2 class="fw-normal">{{viewer.nickName}}</h2>
+      </a>
+      <p>{{viewer.description}}</p>
+      <div *ngIf="role === '[ROLE_ADMIN]'">
+        <button (click)="deleteViewer(viewer.nickName)" onclick="window.location.reload()" type="button" class="btn btn-outline-danger btn-sm">Удалить</button>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<ng-template #unauthorized>
+  <section class="py-4 text-center container">
+        <h3>Необходиомо авторизоваться</h3>
+        <p class="lead text-muted">Чтобы посмотреть существующих пользователей</p>
+  </section>
+  <app-login></app-login>
+</ng-template>

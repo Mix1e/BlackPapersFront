@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import {HttpHeaders} from "@angular/common/http";
+import {Viewer} from "../interfaces/viewer";
 
 const TOKEN_KEY = 'AuthToken';
-const USERNAME_KEY = 'AuthUsername';
 const AUTHORITIES_KEY = 'AuthAuthorities';
+const USERNAME_KEY = 'AuthUsername';
+const USERDESCRIPTION_KEY = 'AuthDescription';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +37,16 @@ export class TokenStorageService {
     // @ts-ignore
     return sessionStorage.getItem(USERNAME_KEY);
   }
+  public saveDescription(description: string) {
+    console.info(description);
+    window.sessionStorage.removeItem(USERDESCRIPTION_KEY);
+    window.sessionStorage.setItem(USERDESCRIPTION_KEY, description);
+  }
+
+  public getDescription(): string {
+    // @ts-ignore
+    return sessionStorage.getItem(USERDESCRIPTION_KEY);
+  }
 
   public saveAuthorities(authorities: string) {
     console.log(authorities);
@@ -48,9 +60,6 @@ export class TokenStorageService {
     if (sessionStorage.getItem(TOKEN_KEY)) {
       // @ts-ignore
       this.role = JSON.parse(sessionStorage.getItem(AUTHORITIES_KEY));
-      /*JSON.parse(sessionStorage.getItem(AUTHORITIES_KEY)).forEach(authority => {
-        this.role = authority;
-      });*/
     }
 
     return this.role;

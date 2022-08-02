@@ -1,30 +1,48 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Paper} from "../interfaces/paper";
+import {Viewer} from "../interfaces/viewer";
 import {environment} from "../../environments/environment";
+import {TokenStorageService} from "./token-storage.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class PaperService {
+export class ViewerService {
 
-  private apiServerUrl = environment.apiBaseUrl;
-  constructor(private http: HttpClient) { }
+  private apiServerUrl = environment.apiBaseUrl + '/viewers';
+  constructor(private http: HttpClient, private token: TokenStorageService) { }
 
-  public getPapers(): Observable<Paper[]> {
-    return this.http.get<Paper[]>(this.apiServerUrl + '/blogs');
+  public getViewers(): Observable<Viewer[]> {
+    let headers: HttpHeaders = new HttpHeaders();
+    /*headers=headers.append('Access-Control-Allow-Origin', '*')
+    headers = headers.append('Content-Type', 'application/json; charset=utf-8');
+    */headers = headers.append('Authorization', 'Bearer ' + this.token.getToken());
+
+    return this.http.get<Viewer[]>(this.apiServerUrl, {headers});
   }
 
-  public addPaper(paper: Paper): Observable<Paper> {
-    return this.http.post<Paper>(this.apiServerUrl +'/create', paper);
+
+  public getViewer(viewerNickName: String): Observable<Viewer> {
+    let headers: HttpHeaders = new HttpHeaders();
+    /*headers=headers.append('Access-Control-Allow-Origin', '*')
+    headers = headers.append('Content-Type', 'application/json; charset=utf-8');
+    */headers = headers.append('Authorization', 'Bearer ' + this.token.getToken());
+
+    return this.http.get<Viewer>(this.apiServerUrl + '/'+ viewerNickName, {headers});
   }
 
-  public updatePaper(paper: Paper): Observable<Paper> {
-    return this.http.put<Paper>(this.apiServerUrl +'/update', paper);
+  public addViewer(viewer: Viewer): Observable<Viewer> {
+    return this.http.post<Viewer>(this.apiServerUrl +'/create', viewer);
   }
 
-  public deletePaper(paperId: number): Observable<void> {
-    return this.http.delete<void>(this.apiServerUrl+ '/delete' + paperId);
+  public updateViewer(viewer: Viewer): Observable<Viewer> {
+    return this.http.put<Viewer>(this.apiServerUrl +'/update', viewer);
+  }
+
+  public deleteViewer(viewerNickName: String): Observable<void> {
+    let headers: HttpHeaders = new HttpHeaders();
+    headers = headers.append('Authorization', 'Bearer ' + this.token.getToken());
+    return this.http.delete<void>(this.apiServerUrl+ '/delete/' + viewerNickName, {headers});
   }
 }

@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import {PaperService} from "./paper.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {PaperService} from "../../services/paper.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {Paper} from "./paper";
+import {Paper} from "../../interfaces/paper";
+import {Viewer} from "../../interfaces/viewer";
+import {Comment} from "../../interfaces/comment";
+import {Router} from "@angular/router";
+import {CommentService} from "../../services/comment.service";
+import {TokenStorageService} from "../../services/token-storage.service";
 
 @Component({
   selector: 'app-papers',
@@ -10,25 +15,33 @@ import {Paper} from "./paper";
 })
 export class PapersComponent implements OnInit {
 
-  public papers: Paper[] | undefined;
+  public papers: Paper[];
+  searchStr: string = '';
+  public role: string;
+  public user: string;
 
-  constructor(private paperService: PaperService) {
+  constructor(private paperService: PaperService, private commentService: CommentService, private token: TokenStorageService) {
+    this.papers = [];
+    this.role = token.getAuthorities();
+    this.user = token.getUsername();
   }
 
   ngOnInit(): void {
     this.getPapers();
   }
 
-  public getPapers(): void {
+  public getPapers() {
     this.paperService.getPapers().subscribe(
       (response: Paper[]) => {
         this.papers = response;
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
       }
     );
   }
 
+  public deletePaper(id: number) {
+    this.paperService.deletePaper(id).subscribe();
+  }
+
 
 }
+

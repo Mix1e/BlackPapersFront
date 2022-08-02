@@ -1,1 +1,31 @@
-<p>add-paper works!</p>
+<div *ngIf="nick; else unauthorized">
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">Расскажите что-то интересное</h1>
+      <p class="lead text-muted">после чего нажмите кнопку публикации</p>
+    </div>
+  </div>
+</section>
+<main class="container">
+  <h3>Введите название:</h3>
+  <input class="form-control form-control-lg mb-3 p-lg-2" type="text" placeholder="Название" [(ngModel)]="newPaper.name"><br>
+  <h3>Краткое описание, которое увидят другие пользователи:</h3>
+  <textarea class="form-control" aria-label="С текстовым полем" placeholder="Описание" [(ngModel)]="newPaper.description"></textarea><br>
+  <h3>Непосредственно статья:</h3>
+  <div class="input-group mb-3">
+    <textarea class="form-control" aria-label="С текстовым полем" placeholder="Текст статьи" [(ngModel)]="newPaper.content"></textarea>
+  </div>
+  <div class="container-fluid text-end m-4">
+    <button type="button" class="btn btn-outline-warning" (click)="addPaper()">Опубликовать!</button>
+  </div>
+</main>
+</div>
+<ng-template #unauthorized>
+  <section class="py-4 text-center container" xmlns:width="http://www.w3.org/1999/xhtml">
+    <h3>Необходиомо авторизоваться</h3>
+    <p class="lead text-muted">Чтобы добавить новую запись </p>
+  </section>
+  <app-login></app-login>
+</ng-template>
+

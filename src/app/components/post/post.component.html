@@ -1,1 +1,35 @@
-<p>post works!</p>
+<div *ngIf="info.token; else loggedOut">
+<main class="container">
+<div class="m-3 p-4 p-md-5 mb-1 text-white rounded bg-dark">
+  <div class="col-md-6 px-0">
+    <h1 class="display-4 fst-italic">{{paper.name}}</h1>
+    <p class="lead my-3">{{paper.description}}</p>
+  </div>
+</div>
+<article class="blog-post m-3">
+  <p class="blog-post-meta">{{paper.dateOfUpdate | date: "medium"}} by <a routerLink="/viewers/{{paper.viewer.nickName}}">{{paper.viewer.nickName}}</a></p>
+  <div class = "align-self-auto mb-auto" contenteditable="true">
+    {{paper.content}}
+  </div>
+</article>
+  <div class="container">
+  <div class="row">
+    <div class="col-10">
+      <button (click)="isLiked()" type="button" class="btn" [ngClass]="{'btn-outline-primary': !control.liked, 'btn-primary': control.liked}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box2-heart" viewBox="0 0 16 16">
+          <path d="M8 7.982C9.664 6.309 13.825 9.236 8 13 2.175 9.236 6.336 6.31 8 7.982Z"/>
+          <path d="M3.75 0a1 1 0 0 0-.8.4L.1 4.2a.5.5 0 0 0-.1.3V15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4.5a.5.5 0 0 0-.1-.3L13.05.4a1 1 0 0 0-.8-.4h-8.5Zm0 1H7.5v3h-6l2.25-3ZM8.5 4V1h3.75l2.25 3h-6ZM15 5v10H1V5h14Z"/>
+        </svg> {{clicked ? (control.liked? paper.likes + 1: paper.likes-1) : (paper.likes)}}
+      </button>
+    </div>
+    <div class="col-2" *ngIf="info.authorities === '[ROLE_ADMIN]' || paper.viewer.nickName === info.username">
+      <button (click)="deletePaper(paper.id)" type="button" class="btn btn-outline-danger">Удалить</button>
+    </div>
+  </div>
+  </div>
+  <app-comments [paper]="paper"></app-comments>
+</main>
+</div>
+<ng-template #loggedOut>
+  <app-login></app-login>
+</ng-template>

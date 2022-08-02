@@ -1,0 +1,10 @@
+.textareaD textarea {
+  resize:none;
+  outline:none;
+  width: 100%;
+  border: 0px solid #eee;
+  transition: .3s border-color;
+
+  height: 480px;
+}
+

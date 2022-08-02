@@ -9,8 +9,6 @@ export interface Paper {
   content:string;
   views:number;
   likes:number;
-  tag:string;
-  comments:Comment[] | undefined;
-  viewer:Viewer | undefined;
   dateOfUpdate: Date;
+  viewer:Viewer;
 }

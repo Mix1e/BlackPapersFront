@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Paper} from "../../interfaces/paper";
+import {Viewer} from "../../interfaces/viewer";
+import {PaperService} from "../../services/paper.service";
+import {ViewerService} from "../../services/viewer.service";
+import {TokenStorageService} from "../../services/token-storage.service";
 
 @Component({
   selector: 'app-viewers',
@@ -6,10 +11,30 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./viewers.component.css']
 })
 export class ViewersComponent implements OnInit {
+  viewers: Viewer[] = [];
+  searchViewersStr:string = '';
+  username: string;
+  role: string;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private viewerService: ViewerService, private token: TokenStorageService) {
+    this.username = token.getUsername();
+    this.getViewers();
+    this.role = token.getAuthorities();
   }
 
+  ngOnInit(): void {
+
+  }
+
+  public getViewers(): void {
+    this.viewerService.getViewers().subscribe(
+      (response: Viewer[]) => {
+        this.viewers = response;
+      }
+    );
+  }
+
+  public deleteViewer(nickName: string) {
+    this.viewerService.deleteViewer(nickName).subscribe();
+  }
 }

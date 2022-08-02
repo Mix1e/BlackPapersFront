@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {AuthLoginInfo} from "./models/login-info";
-import {JwtResponse} from "./jwt-response";
-import {SignupInfo} from "./models/signup-info";
-import {environment} from "../../../environments/environment";
+import {AuthLoginInfo} from "../components/auth/models/login-info";
+import {JwtResponse} from "../components/auth/jwt-response";
+import {SignupInfo} from "../components/auth/models/signup-info";
+import {environment} from "../../environments/environment";
 
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
-
-
 
 
 @Injectable({
@@ -24,7 +22,6 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
   }
-
 
   login(credentials: AuthLoginInfo): Observable<JwtResponse> {
     return this.http.post<JwtResponse>(this.loginUrl, credentials, httpOptions);
