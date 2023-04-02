@@ -1,5 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {TokenStorageService} from "../../services/token-storage.service";
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-about',
@@ -7,7 +6,8 @@ import {TokenStorageService} from "../../services/token-storage.service";
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

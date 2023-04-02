@@ -1,36 +1,84 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Ninth navbar example">
-  <div class="container-xl">
-    <a class="navbar-brand" routerLink="/">BlackPapers</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07XL" aria-controls="navbarsExample07XL" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="container-xl">
+        <a class="navbar-brand" routerLink="/">BlackPapers</a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarsExample07XL"
+            aria-controls="navbarsExample07XL"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="nav col-12 col-md-11 mb-5 justify-content-center mb-md-0">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" routerLink="/">Главная</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" routerLink="/create">Добавить историю</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" routerLink="/viewers">Пользователи</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" routerLink="/about">О сайте</a>
-        </li>
-      </ul>
-      <div *ngIf="!role; else entered" >
-        <div class="text-end">
-          <button type="button" class="btn btn-outline-light me-2" routerLink="/login">Войти</button>
-          <button type="button" class="btn btn-outline-warning" routerLink="/register">Регистрация</button>
+        <div class="nav col-12 col-md-11 mb-5 justify-content-center mb-md-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="currentPage$ | async as currentPage">
+                <li class="nav-item">
+                    <a
+                        [ngClass]="{ active: currentPage === 'blogs' }"
+                        class="nav-link"
+                        aria-current="page"
+                        routerLink="/blogs"
+                        >Главная</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        [ngClass]="{ active: currentPage === 'create' }"
+                        class="nav-link"
+                        aria-current="page"
+                        routerLink="/create"
+                        >Добавить историю
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                        [ngClass]="{ active: currentPage === 'viewers' }"
+                        class="nav-link"
+                        aria-current="page"
+                        routerLink="/viewers"
+                        >Пользователи</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        [ngClass]="{ active: currentPage === 'about' }"
+                        class="nav-link"
+                        aria-current="page"
+                        routerLink="/about"
+                        >О сайте</a>
+                </li>
+            </ul>
+            <div *ngIf="!(role$ | async); else entered">
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-light me-2" routerLink="/login">
+                        Войти
+                    </button>
+                    <button type="button" class="btn btn-outline-warning" routerLink="/register">
+                        Регистрация
+                    </button>
+                </div>
+            </div>
+            <ng-template #entered>
+                <ng-container *ngIf="userName$ | async as userName">
+                <a
+                    class="nav-link active"
+                    aria-current="page"
+                    routerLink="/viewers/{{ userName }}"
+                    >{{ userName }}
+                </a>
+                <button
+                    (click)="logout()"
+                    type="button"
+                    class="btn btn-outline-warning"
+                    routerLink="/register"
+                >
+                    Выйти
+                </button>
+                </ng-container>
+            </ng-template>
         </div>
-      </div>
-      <ng-template #entered>
-        <a class="nav-link active" aria-current="page" routerLink="/viewers/{{info.username}}">{{info.username}} </a>
-        <button (click)="logout()" type="button" class="btn btn-outline-warning" routerLink="/register">Выйти</button>
-      </ng-template>
     </div>
-  </div>
 </nav>
-

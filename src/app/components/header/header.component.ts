@@ -1,31 +1,37 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {TokenStorageService} from "../../services/token-storage.service";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { TokenStorageService } from "../../services/token-storage.service";
+import { Router, Scroll } from "@angular/router";
+import { BehaviorSubject } from "rxjs";
+
+type TRouteUrl = 'blogs' | 'create' | 'viewers' | 'about' | '';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
+    public role$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    public userName$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    public currentPage$: BehaviorSubject<TRouteUrl> = new BehaviorSubject<TRouteUrl>('');
 
-  role: string = "";
-  info: any;
+    constructor(private token: TokenStorageService, private router: Router) {
+        this.router.events.subscribe((event) => {
+            if (event instanceof Scroll) {
+                const relativeUrl: string = event.routerEvent.urlAfterRedirects.split('/')[1];
+                this.currentPage$.next(relativeUrl as TRouteUrl);
+            }
+        });
 
-  constructor(private token: TokenStorageService) { }
-
-  ngOnInit() {
-    if (this.token.getToken()) {
-      this.role = this.token.getAuthorities();
+        if (this.token.getToken()) {
+            this.role$.next(this.token.getAuthorities());
+        }
+        this.userName$.next(this.token.getUsername());
     }
-    this.info = {
-      token: this.token.getToken(),
-      username: this.token.getUsername(),
-      authorities: this.token.getAuthorities()
-    };
-  }
 
-  public logout() {
-    this.token.signOut();
-    window.location.reload();
-  }
+    public logout() {
+        this.role$.next('');
+        this.token.signOut();
+    }
 }

@@ -1,32 +1,55 @@
 <body>
-<section class="py-5 text-center container" xmlns:width="http://www.w3.org/1999/xhtml">
-  <div class="row py-lg-5">
-    <div class="col-lg-6 col-md-8 mx-auto">
-      <h1 class="fw-light">Введите свои данные</h1>
-      <p class="lead text-muted">и нажмите "Войти"</p>
-    </div>
-  </div>
-</section>
-<form class="form-signin">
-  <section class="w-100 p-4 d-flex justify-content-center pb-4">
-    <form style="width: 22rem;">
-      <div class="form-outline mb-4">
-        <input class="form-control" name="username" [(ngModel)]="loginInfo.username">
-        <label class="form-label" style="margin-left: 0px;">Никнейм</label>
-        <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 88.8px;"></div><div class="form-notch-trailing"></div></div></div>
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Введите свои данные</h1>
+                <p class="lead text-muted">и нажмите "Войти"</p>
+            </div>
+        </div>
+    </section>
+    <form class="form-signin">
+        <section class="w-100 p-4 d-flex justify-content-center pb-4">
+            <form style="width: 22rem">
+                <div class="form-outline mb-4">
+                    <input class="form-control" name="username" [(ngModel)]="loginInfo.username" />
+                    <label class="form-label" style="margin-left: 0px">Никнейм</label>
+                    <div class="form-notch">
+                        <div class="form-notch-leading" style="width: 9px"></div>
+                        <div class="form-notch-middle" style="width: 88.8px"></div>
+                        <div class="form-notch-trailing"></div>
+                    </div>
+                </div>
 
-      <div class="form-outline mb-4">
-        <input type="password" id="form2Example2" class="form-control" name="password"  [(ngModel)]="loginInfo.password">
-        <label class="form-label" for="form2Example2" style="margin-left: 0px;">Пароль</label>
-        <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div></div>
+                <div class="form-outline mb-4">
+                    <input
+                        type="password"
+                        id="form2Example2"
+                        class="form-control"
+                        name="password"
+                        [(ngModel)]="loginInfo.password"
+                    />
+                    <label class="form-label" for="form2Example2" style="margin-left: 0px"
+                        >Пароль</label
+                    >
+                    <div class="form-notch">
+                        <div class="form-notch-leading" style="width: 9px"></div>
+                        <div class="form-notch-middle" style="width: 64px"></div>
+                        <div class="form-notch-trailing"></div>
+                    </div>
+                </div>
 
-      <button type="button" class="btn btn-outline-dark btn-block mb-4" (click)="onSubmit()">Войти</button>
+                <button
+                    type="button"
+                    class="btn btn-outline-dark btn-block mb-4"
+                    (click)="onSubmit()"
+                >
+                    Войти
+                </button>
 
-      <div class="text-center">
-        <p>Нет аккаунта? <a routerLink="/register">Регистрация</a></p>
-      </div>
+                <div class="text-center">
+                    <p>Нет аккаунта? <a routerLink="/register">Регистрация</a></p>
+                </div>
+            </form>
+        </section>
     </form>
-  </section>
-
-</form>
 </body>

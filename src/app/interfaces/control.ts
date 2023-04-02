@@ -1,10 +1,9 @@
-import {Paper} from "./paper";
-import {Viewer} from "./viewer";
+import { Paper } from './paper';
+import { Viewer } from './viewer';
 
 export interface Control {
-
-  id: number;
-  paper: Paper;
-  viewer: Viewer;
-  liked: boolean;
+    id: number;
+    paper: Paper;
+    viewer: Viewer;
+    liked: boolean;
 }

@@ -1,14 +1,12 @@
-import {Viewer} from "./viewer";
-import {Comment} from "./comment";
+import { Viewer } from './viewer';
 
 export interface Paper {
-
-  id:number;
-  name:string;
-  description:string;
-  content:string;
-  views:number;
-  likes:number;
-  dateOfUpdate: Date;
-  viewer:Viewer;
+    id: number;
+    name: string;
+    description: string;
+    content: string;
+    views: number;
+    likes: number;
+    updated: Date;
+    viewer: Viewer;
 }
