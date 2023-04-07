@@ -1,5 +1,5 @@
-<div *ngIf="info.token; else loggedOut">
-    <main class="container">
+<div *ngIf="isAuthorized; else loggedOut">
+    <main *ngIf="paper$ | async as paper" class="container">
         <div class="m-3 p-4 p-md-5 mb-1 text-white rounded bg-dark">
             <div class="col-md-6 px-0">
                 <h1 class="display-4 fst-italic">{{ paper.name }}</h1>
@@ -19,12 +19,12 @@
             <div class="row">
                 <div class="col-10">
                     <button
-                        (click)="isLiked()"
+                        (click)="onLike()"
                         type="button"
                         class="btn"
                         [ngClass]="{
-                            'btn-outline-primary': !control.liked,
-                            'btn-primary': control.liked
+                            'btn-outline-primary': !(isLiked() | async),
+                            'btn-primary': isLiked() | async
                         }"
                     >
                         <svg
@@ -42,21 +42,12 @@
                                 d="M3.75 0a1 1 0 0 0-.8.4L.1 4.2a.5.5 0 0 0-.1.3V15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4.5a.5.5 0 0 0-.1-.3L13.05.4a1 1 0 0 0-.8-.4h-8.5Zm0 1H7.5v3h-6l2.25-3ZM8.5 4V1h3.75l2.25 3h-6ZM15 5v10H1V5h14Z"
                             />
                         </svg>
-                        {{
-                            clicked
-                                ? control.liked
-                                    ? paper.likes + 1
-                                    : paper.likes - 1
-                                : paper.likes
-                        }}
+                        {{ getLikesCount(paper) }}
                     </button>
                 </div>
                 <div
                     class="col-2"
-                    *ngIf="
-                        info.authorities === '[ROLE_ADMIN]' ||
-                        paper.viewer.nickName === info.username
-                    "
+                    *ngIf="canDelete(paper)"
                 >
                     <button
                         (click)="deletePaper(paper.id)"

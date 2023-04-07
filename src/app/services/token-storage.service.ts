@@ -47,7 +47,6 @@ export class TokenStorageService {
     }
 
     public saveAuthorities(authorities: string) {
-        console.log(authorities);
         window.sessionStorage.removeItem(AUTHORITIES_KEY);
         window.sessionStorage.setItem(AUTHORITIES_KEY, JSON.stringify(authorities));
     }

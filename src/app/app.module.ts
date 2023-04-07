@@ -10,7 +10,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { PostComponent } from './components/post/post.component';
 import { CommentsComponent } from './components/comments/comments.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SearchPipe } from './components/papers/search.pipe';
 import { ViewersComponent } from './components/viewers/viewers.component';
 import { AboutComponent } from './components/about/about.component';
@@ -48,6 +48,7 @@ import { ErrorComponent } from './components/error/error.component';
         FormsModule,
         NoopAnimationsModule,
         MatSnackBarModule,
+        ReactiveFormsModule
     ],
     providers: [httpInterceptorProviders],
     bootstrap: [AppComponent],

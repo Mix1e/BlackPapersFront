@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Paper } from '../../interfaces/paper';
 import { Router } from '@angular/router';
 import { PaperService } from '../../services/paper.service';
@@ -7,19 +7,20 @@ import { Comment } from '../../interfaces/comment';
 import { TokenStorageService } from '../../services/token-storage.service';
 import { Viewer } from '../../interfaces/viewer';
 import { ViewerService } from '../../services/viewer.service';
+import { BehaviorSubject, map, Observable, switchMap, take } from "rxjs";
 
 @Component({
     selector: 'app-comments',
     templateUrl: './comments.component.html',
     styleUrls: ['./comments.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommentsComponent implements OnInit {
-    public comments = {} as Comment[];
-    public newComment = {} as Comment;
-    @Input() paper = {} as Paper;
+    @Input() paper: Paper = {} as Paper;
+    public newComment: Comment = {} as Comment;
     public role: string;
     public user: string;
-    private viewer = {} as Viewer;
+    public comments$: BehaviorSubject<Comment[]> = new BehaviorSubject<Comment[]>([]);
 
     constructor(
         private router: Router,
@@ -33,32 +34,50 @@ export class CommentsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getComments();
-        this.getViewer(this.user);
+        this.loadComments();
     }
 
-    public getComments() {
-        this.commentService.getCommentsByPaperId(this.paper.id).subscribe((value) => {
-            this.comments = value;
-        });
+    private loadComments(): void {
+        this.commentService
+            .getCommentsByPaperId(this.paper.id)
+            .pipe(
+                take(1),
+                map(
+                    (comments: Comment[]) => comments.reverse(),
+                ),
+            )
+            .subscribe((comments: Comment[]) => this.comments$.next(comments));
     }
 
     public addComment(): void {
         if (this.newComment.content) {
-            this.newComment.paper = this.paper;
-            this.newComment.viewer = this.viewer;
-            this.newComment.likes = 0;
-            this.commentService.addComment(this.newComment).subscribe();
-            location.reload();
+            this.viewerService
+                .getViewer(this.token.getUsername())
+                .pipe(
+                    take(1),
+                    switchMap((user: Viewer) =>
+                        this.commentService.addComment({
+                            paper: this.paper,
+                            viewer: user,
+                            content: this.newComment.content,
+                        }),
+                    ),
+                )
+                .subscribe({
+                    next: () => this.loadComments(),
+                });
         }
     }
 
-    public deleteComment(id: number) {
-        this.commentService.deleteComment(id).subscribe();
-        location.reload();
+    public likeComment(comment: Comment) {
+        //FIXME
     }
 
-    public getViewer(name: string) {
-        this.viewerService.getViewer(name).subscribe((value) => (this.viewer = value));
+    public deleteComment(id: number) {
+        this.commentService.deleteComment(id).pipe(
+            take(1),
+        ).subscribe(
+            () => this.loadComments(),
+        );
     }
 }

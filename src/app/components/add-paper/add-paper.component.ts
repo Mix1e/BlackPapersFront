@@ -14,8 +14,8 @@ import { take } from "rxjs";
     styleUrls: ['./add-paper.component.css'],
 })
 export class AddPaperComponent {
-    newPaper = {} as Paper;
-    viewer = {} as Viewer;
+    newPaper: Paper = {} as Paper;
+    viewer: Viewer = {} as Viewer;
     nick: string;
 
     constructor(

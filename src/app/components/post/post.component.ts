@@ -6,6 +6,8 @@ import { TokenStorageService } from '../../services/token-storage.service';
 import { Control } from '../../interfaces/control';
 import { ViewerService } from '../../services/viewer.service';
 import { ControlService } from '../../services/control.service';
+import { combineLatest, filter, map, Observable, switchMap, take } from "rxjs";
+import { Viewer } from "../../interfaces/viewer";
 
 @Component({
     selector: 'app-post',
@@ -13,10 +15,25 @@ import { ControlService } from '../../services/control.service';
     styleUrls: ['./post.component.css'],
 })
 export class PostComponent implements OnInit {
-    public paper = {} as Paper;
-    public info: any;
-    public control = {} as Control;
-    public clicked: boolean;
+    public control$: Observable<Control>;
+    public paper$: Observable<Paper>;
+
+    public get isAuthorized(): boolean {
+        return !!this.token.getToken();
+    }
+
+    public get authorities(): string {
+        return this.token.getAuthorities();
+    }
+
+    public get userName(): string {
+        return this.token.getUsername();
+    }
+
+    public get paperId(): number {
+        const id: string = this.route.snapshot.paramMap.get('id') ?? '';
+        return +id;
+    }
 
     constructor(
         private route: ActivatedRoute,
@@ -26,71 +43,86 @@ export class PostComponent implements OnInit {
         private controlService: ControlService,
         private router: Router,
     ) {
-        this.info = {
-            token: this.token.getToken(),
-            username: this.token.getUsername(),
-            authorities: this.token.getAuthorities(),
-            paperId: this.route.snapshot.paramMap.get('id'),
-        };
-        this.clicked = false;
+        this.paper$ = this.getPaper(this.paperId);
+        this.control$ = this.getControl();
+
     }
 
     ngOnInit(): void {
-        this.getPaper(this.info.paperId);
-        this.getViewer(this.info.username);
-        this.doControl();
+        //this.getViewer(this.userName);
     }
 
-    private doControl(): void {
-        this.controlService
-            .existControl(this.info.paperId, this.info.username)
-            .subscribe((value) => {
-                if (!value) {
-                    this.paperService.getPaperById(this.info.paperId).subscribe((value) => {
-                        this.control.paper = value;
-                        this.control.liked = false;
-                        this.controlService.addControl(this.control).subscribe((value) => {
-                            this.control = value;
-                        });
-                    });
-                } else {
-                    this.controlService
-                        .getControl(this.info.paperId, this.info.username)
-                        .subscribe((value1) => {
-                            this.control = value1;
-                        });
-                }
-            });
+    private getControl(): Observable<Control> {
+        return this.controlService
+            .existControl(this.paperId, this.userName).pipe(
+                take(1),
+                filter(
+                    (isExist: boolean) => {
+                        if(!isExist) {
+                            this.paperService.getPaperById(this.paperId).pipe(
+                                take(1),
+                                switchMap(
+                                    (paper: Paper) => {
+                                        // @ts-ignore
+                                        const control: Control = {
+                                            paper: paper,
+                                            liked: false,
+                                        }
+                                        return this.controlService.addControl(control);
+                                    }
+                                ),
+                            ).subscribe((value) => {
+                                console.log(value);
+                            });
+                            return false;
+                        }
+                        return true;
+                    },
+                ),
+                switchMap(
+                    () => this.controlService
+                        .getControl(this.paperId, this.userName)
+                ),
+            )
     }
 
-    public getPaper(id: number) {
-        this.paperService.getPaperById(id).subscribe((value) => {
-            this.paper = value;
-        });
+    public getLikesCount(paper: Paper): number {
+        return paper.likes;
     }
 
-    public getViewer(name: string) {
-        this.viewerService.getViewer(name).subscribe((value) => {
-            this.control.viewer = value;
-        });
+    public canDelete(paper: Paper): boolean {
+        return this.authorities === '[ROLE_ADMIN]' || paper.viewer.nickName === this.userName;
+    }
+
+    public isLiked(): Observable<boolean> {
+        return this.control$.pipe(
+            map(
+                (control: Control) => control.liked,
+            ),
+        )
+    }
+
+    public onLike() {
+        this.control$ = this.controlService
+            .getControl(this.paperId, this.userName).pipe(
+                take(1),
+                switchMap(
+                    (control: Control) =>  this.controlService.likeControl(control),
+                ),
+            )
+    }
+
+    public getPaper(id: number): Observable<Paper> {
+        return this.paperService.getPaperById(id);
+    }
+
+    public getViewer(name: string): Observable<Viewer> {
+        return this.viewerService.getViewer(name);
     }
 
     public deletePaper(id: number) {
-        this.paperService.deletePaper(id).subscribe();
-        this.router.navigate(['/blogs']).then(() => {
-            window.location.reload();
+        this.paperService.deletePaper(id).pipe(take(1)).subscribe({
+            complete: () => this.router.navigate(['/blogs']).then(),
         });
-    }
-
-    public isLiked() {
-        this.clicked = !this.clicked;
-        // @ts-ignore
-        this.control = this.controlService
-            .getControl(this.info.paperId, this.info.username)
-            .subscribe((value) => {
-                this.controlService.likeControl(value).subscribe((value) => {
-                    this.control = value;
-                });
-            });
     }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as dayjs from "dayjs";
 
 @Component({
     selector: 'app-footer',
@@ -6,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./footer.component.css'],
 })
 export class FooterComponent implements OnInit {
-    constructor() {}
+    year: number;
+    constructor() {
+        this.year = dayjs().year();
+    }
 
     ngOnInit(): void {}
 }
