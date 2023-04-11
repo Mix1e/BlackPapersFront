@@ -27,7 +27,7 @@
                 <div
                     class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
                 >
-                    <div class="col p-4 d-flex flex-column position-static">
+                    <div class="col p-4 d-flex flex-column">
                         <strong class="mb-1 text-secondary">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +61,7 @@
                             {{ paper.likes }}
                         </strong>
                         <div style="width: 400px">
-                            <h3 class="mb-0 m-lg-0">{{ paper.name }}</h3>
+                            <h3 class="mb-0 m-lg-0 card-content">{{ paper.name }}</h3>
                         </div>
 
                         <div class="mb-1 text-muted m-lg-1">
@@ -70,12 +70,10 @@
                                 paper.viewer.nickName
                             }}</a>
                         </div>
-                        <div class="textareaD">
-                            <p>
-                                <textarea name="textarea" readonly>{{
-                                    paper.description
-                                }}</textarea>
-                            </p>
+                        <div class="card-content mb-4" style="width: 400px">
+                            <span class="card-content" readonly>
+                                {{ paper.description }}
+                            </span>
                         </div>
                         <div class="row">
                             <a class="col" [routerLink]="['/blogs', paper.id]">Читать далее</a>
@@ -104,7 +102,7 @@
                             preserveAspectRatio="xMidYMid slice"
                             focusable="false"
                         >
-                            <title>Placeholder</title>
+                            <title>Красивая шутка</title>
                             <rect width="100%" height="100%" fill="#55595c"></rect>
                         </svg>
                     </div>

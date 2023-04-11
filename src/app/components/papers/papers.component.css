@@ -9,3 +9,8 @@
   transition: .3s border-color;
 }
 
+.card-content {
+    text-align: start;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

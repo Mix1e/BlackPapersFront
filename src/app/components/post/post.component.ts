@@ -1,21 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Paper } from '../../interfaces/paper';
-import { PaperService } from '../../services/paper.service';
-import { TokenStorageService } from '../../services/token-storage.service';
-import { Control } from '../../interfaces/control';
-import { ViewerService } from '../../services/viewer.service';
-import { ControlService } from '../../services/control.service';
-import { combineLatest, filter, map, Observable, switchMap, take } from "rxjs";
-import { Viewer } from "../../interfaces/viewer";
+import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Paper } from "../../interfaces/paper";
+import { PaperService } from "../../services/paper.service";
+import { TokenStorageService } from "../../services/token-storage.service";
+import { Control } from "../../interfaces/control";
+import { ViewerService } from "../../services/viewer.service";
+import { ControlService, TCreateControlRequest } from "../../services/control.service";
+import { BehaviorSubject, filter, map, Observable, switchMap, take } from "rxjs";
+import { LikeRequest } from "../../interfaces/like-request";
 
 @Component({
     selector: 'app-post',
     templateUrl: './post.component.html',
     styleUrls: ['./post.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostComponent implements OnInit {
-    public control$: Observable<Control>;
+    public control$: BehaviorSubject<Control> = new BehaviorSubject<Control>({} as Control);
     public paper$: Observable<Paper>;
 
     public get isAuthorized(): boolean {
@@ -35,6 +36,10 @@ export class PostComponent implements OnInit {
         return +id;
     }
 
+    public get likeRequest(): LikeRequest  {
+        return { paperId: this.paperId, nickName: this.userName } as LikeRequest;
+    }
+
     constructor(
         private route: ActivatedRoute,
         private paperService: PaperService,
@@ -44,46 +49,24 @@ export class PostComponent implements OnInit {
         private router: Router,
     ) {
         this.paper$ = this.getPaper(this.paperId);
-        this.control$ = this.getControl();
-
     }
 
     ngOnInit(): void {
-        //this.getViewer(this.userName);
-    }
-
-    private getControl(): Observable<Control> {
-        return this.controlService
-            .existControl(this.paperId, this.userName).pipe(
-                take(1),
-                filter(
-                    (isExist: boolean) => {
-                        if(!isExist) {
-                            this.paperService.getPaperById(this.paperId).pipe(
-                                take(1),
-                                switchMap(
-                                    (paper: Paper) => {
-                                        // @ts-ignore
-                                        const control: Control = {
-                                            paper: paper,
-                                            liked: false,
-                                        }
-                                        return this.controlService.addControl(control);
-                                    }
-                                ),
-                            ).subscribe((value) => {
-                                console.log(value);
-                            });
-                            return false;
-                        }
-                        return true;
-                    },
-                ),
-                switchMap(
-                    () => this.controlService
-                        .getControl(this.paperId, this.userName)
-                ),
+        this.isControlExist().pipe(
+            take(1),
+            filter((isExist: boolean) => {
+                if(!isExist) {
+                    this.createControl();
+                    return false;
+                }
+                return true;
+            }),
+            switchMap(
+                () => this.controlService.getControl(this.likeRequest)
             )
+        ).subscribe(
+            (control: Control) => this.control$.next(control),
+        )
     }
 
     public getLikesCount(paper: Paper): number {
@@ -95,34 +78,47 @@ export class PostComponent implements OnInit {
     }
 
     public isLiked(): Observable<boolean> {
-        return this.control$.pipe(
-            map(
-                (control: Control) => control.liked,
-            ),
-        )
+        return this.control$.pipe(map((control: Control) => control.liked));
     }
 
     public onLike() {
-        this.control$ = this.controlService
-            .getControl(this.paperId, this.userName).pipe(
+        this.controlService
+            .likeControl(this.likeRequest)
+            .pipe(
                 take(1),
-                switchMap(
-                    (control: Control) =>  this.controlService.likeControl(control),
-                ),
             )
+            .subscribe((control: Control) => {
+                this.control$.next(control);
+                this.paper$ = this.getPaper(this.paperId);
+            });
     }
 
     public getPaper(id: number): Observable<Paper> {
         return this.paperService.getPaperById(id);
     }
 
-    public getViewer(name: string): Observable<Viewer> {
-        return this.viewerService.getViewer(name);
+    public deletePaper(id: number) {
+        this.paperService
+            .deletePaper(id)
+            .pipe(take(1))
+            .subscribe({
+                complete: () => this.router.navigate(['/blogs']).then(),
+            });
     }
 
-    public deletePaper(id: number) {
-        this.paperService.deletePaper(id).pipe(take(1)).subscribe({
-            complete: () => this.router.navigate(['/blogs']).then(),
-        });
+    private createControl(): void {
+        const createRequest: TCreateControlRequest = {
+            paperId: this.paperId,
+            viewerName: this.userName,
+            liked: false,
+        }
+
+        this.controlService.addControl(createRequest).pipe(take(1)).subscribe(
+            (control: Control) => this.control$.next(control),
+        );
+    }
+
+    private isControlExist(): Observable<boolean> {
+        return this.controlService.existControl(this.likeRequest)
     }
 }

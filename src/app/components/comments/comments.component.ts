@@ -7,7 +7,7 @@ import { Comment } from '../../interfaces/comment';
 import { TokenStorageService } from '../../services/token-storage.service';
 import { Viewer } from '../../interfaces/viewer';
 import { ViewerService } from '../../services/viewer.service';
-import { BehaviorSubject, map, Observable, switchMap, take } from "rxjs";
+import { BehaviorSubject, map, switchMap, take } from "rxjs";
 
 @Component({
     selector: 'app-comments',
@@ -67,10 +67,6 @@ export class CommentsComponent implements OnInit {
                     next: () => this.loadComments(),
                 });
         }
-    }
-
-    public likeComment(comment: Comment) {
-        //FIXME
     }
 
     public deleteComment(id: number) {
