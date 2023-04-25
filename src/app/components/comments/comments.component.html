@@ -17,56 +17,14 @@
                     <hr />
                     <div *ngIf="comments$ | async as comments">
                         <div *ngFor="let comment of comments">
-                            <ul class="media-list">
-                                <li class="media">
-                                    <div class="row">
-                                        <a
-                                            routerLink="/viewers/{{ comment.viewer.nickName }}"
-                                            class="pull-left col"
-                                        >
-                                            <img
-                                                src="https://school2skopin.ru/wp-content/uploads/2021/08/unnamed.jpg"
-                                                alt=""
-                                                class="img-circle"
-                                            />
-                                            <strong class="text-success m-3">{{
-                                                comment.viewer.nickName
-                                            }}</strong>
-                                        </a>
-                                        <div
-                                            class="col-1"
-                                            *ngIf="
-                                                role === '[ROLE_ADMIN]' ||
-                                                comment.viewer.nickName === user ||
-                                                paper.viewer.nickName === user
-                                            "
-                                        >
-                                            <button
-                                                (click)="deleteComment(comment.id)"
-                                                type="button"
-                                                class="btn btn-outline-danger btn-sm"
-                                            >
-                                                X
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="media-body">
-                                        <span class="text-muted pull-right">
-                                            <small class="text-muted">{{
-                                                comment.dateOfUpdate | date : 'medium'
-                                            }}</small>
-                                        </span>
-
-                                        <div class="textareaD align-self-auto mb-auto">
-                                            <p>
-                                                <textarea name="textarea" rows="" readonly>{{
-                                                    comment.content
-                                                }}</textarea>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
+                            <app-comment
+                                [comment]="comment"
+                                [paper]="paper"
+                                [role]="role"
+                                [user]="user"
+                                (delete)="deleteComment($event)"
+                            >
+                            </app-comment>
                         </div>
                     </div>
                 </div>

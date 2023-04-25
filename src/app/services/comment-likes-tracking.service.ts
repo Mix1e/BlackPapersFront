@@ -5,38 +5,39 @@ import { environment } from '../../environments/environment';
 import { TokenStorageService } from './token-storage.service';
 import { Control } from '../interfaces/control';
 import { LikeRequest } from "../interfaces/like-request";
+import { CommentsLikesTracking } from "../interfaces/comment";
 
-export type TCreateControlRequest = Pick<Control,  'liked'> & {
-    paperId: number;
+export type TCreateCommentsLikesTrackingRequest = Pick<CommentsLikesTracking,  'liked'> & {
+    commentId: number;
     viewerName: string;
 };
 
 @Injectable({
     providedIn: 'root',
 })
-export class ControlService {
-    private apiServerUrl = environment.apiBaseUrl + '/control';
+export class CommentsLikesTrackingService {
+    private apiServerUrl = environment.apiBaseUrl + '/comments/tracking';
 
     constructor(private http: HttpClient, private token: TokenStorageService) {}
 
-    public getControl(likeRequest: LikeRequest): Observable<Control> {
+    public getControl(likeRequest: LikeRequest): Observable<CommentsLikesTracking> {
         let headers: HttpHeaders = new HttpHeaders();
         headers.append('Authorization', 'Bearer ' + this.token.getToken());
-        return this.http.get<Control>(this.apiServerUrl + '/' + likeRequest.id + '/' + likeRequest.nickName, {
+        return this.http.get<CommentsLikesTracking>(this.apiServerUrl + '/' + likeRequest.id + '/' + likeRequest.nickName, {
             headers,
         });
     }
 
-    public addControl(createRequest: TCreateControlRequest): Observable<Control> {
+    public addControl(createRequest: TCreateCommentsLikesTrackingRequest): Observable<CommentsLikesTracking> {
         let headers: HttpHeaders = new HttpHeaders();
         headers.append('Authorization', 'Bearer ' + this.token.getToken());
-        return this.http.post<Control>(this.apiServerUrl + '/add', createRequest, { headers });
+        return this.http.post<CommentsLikesTracking>(this.apiServerUrl + '/add', createRequest, { headers });
     }
 
-    public updateControl(control: Control): Observable<Control> {
+    public updateControl(control: CommentsLikesTracking): Observable<CommentsLikesTracking> {
         let headers: HttpHeaders = new HttpHeaders();
         headers.append('Authorization', 'Bearer ' + this.token.getToken());
-        return this.http.put<Control>(this.apiServerUrl + '/update', control, { headers });
+        return this.http.put<CommentsLikesTracking>(this.apiServerUrl + '/update', control, { headers });
     }
 
     public existControl(likeRequest: LikeRequest): Observable<boolean> {
@@ -47,9 +48,9 @@ export class ControlService {
         });
     }
 
-    public likeControl(likeRequest: LikeRequest): Observable<Control> {
+    public likeControl(likeRequest: LikeRequest): Observable<CommentsLikesTracking> {
         let headers: HttpHeaders = new HttpHeaders();
         headers.append('Authorization', 'Bearer ' + this.token.getToken());
-        return this.http.put<Control>(this.apiServerUrl + '/like', likeRequest, { headers });
+        return this.http.put<CommentsLikesTracking>(this.apiServerUrl + '/like', likeRequest, { headers });
     }
 }

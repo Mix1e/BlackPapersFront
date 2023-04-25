@@ -1,4 +1,4 @@
 export interface LikeRequest {
-    paperId: number;
+    id: number;
     nickName: string;
 }

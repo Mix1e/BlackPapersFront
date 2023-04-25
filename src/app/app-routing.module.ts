@@ -11,21 +11,21 @@ import { RegisterComponent } from './components/register/register.component';
 import { ErrorComponent } from './components/error/error.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'blogs', pathMatch: 'full' },
-  { path: 'blogs', component: PapersComponent },
-  { path: 'blogs/:id', component: PostComponent },
-  { path: 'viewers', component: ViewersComponent },
-  { path: 'viewers/:id', component: ProfileComponent },
-  { path: 'about', component: AboutComponent },
-  { path: 'create', component: AddPaperComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'error', component: ErrorComponent },
-  { path: '**', redirectTo: '/error' },
+    { path: '', redirectTo: 'blogs', pathMatch: 'full' },
+    { path: 'blogs', component: PapersComponent },
+    { path: 'blogs/:id', component: PostComponent },
+    { path: 'viewers', component: ViewersComponent },
+    { path: 'viewers/:id', component: ProfileComponent },
+    { path: 'about', component: AboutComponent },
+    { path: 'create', component: AddPaperComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+    { path: 'error', component: ErrorComponent },
+    { path: '**', redirectTo: '/error' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule],
 })
 export class AppRoutingModule {}

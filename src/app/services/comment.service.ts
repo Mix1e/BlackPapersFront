@@ -18,7 +18,13 @@ export class CommentService {
     public getCommentsByPaperId(id: number): Observable<Comment[]> {
         let headers: HttpHeaders = new HttpHeaders();
         headers.append('Authorization', 'Bearer ' + this.token.getToken());
-        return this.http.get<Comment[]>(this.apiServerUrl + '/' + id, { headers });
+        return this.http.get<Comment[]>(this.apiServerUrl + '/all/' + id, { headers });
+    }
+
+    public getCommentById(id: number): Observable<Comment> {
+        let headers: HttpHeaders = new HttpHeaders();
+        headers.append('Authorization', 'Bearer ' + this.token.getToken());
+        return this.http.get<Comment>(this.apiServerUrl + '/' + id, { headers });
     }
 
     public addComment(comment: TCreateCommentRequest): Observable<Comment> {

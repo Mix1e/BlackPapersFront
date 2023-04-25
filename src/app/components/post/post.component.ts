@@ -37,7 +37,7 @@ export class PostComponent implements OnInit {
     }
 
     public get likeRequest(): LikeRequest  {
-        return { paperId: this.paperId, nickName: this.userName } as LikeRequest;
+        return { id: this.paperId, nickName: this.userName } as LikeRequest;
     }
 
     constructor(

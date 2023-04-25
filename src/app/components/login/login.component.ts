@@ -48,8 +48,6 @@ export class LoginComponent implements OnInit {
     }
 
     homePage() {
-        this.router.navigate(['/blogs']).then(() => {
-            window.location.reload();
-        });
+        this.router.navigate(['/blogs']).then(() => location.reload());
     }
 }

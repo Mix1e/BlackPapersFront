@@ -3,7 +3,7 @@ import { Paper } from '../../interfaces/paper';
 import { Router } from '@angular/router';
 import { PaperService } from '../../services/paper.service';
 import { CommentService } from '../../services/comment.service';
-import { Comment } from '../../interfaces/comment';
+import { Comment } from "../../interfaces/comment";
 import { TokenStorageService } from '../../services/token-storage.service';
 import { Viewer } from '../../interfaces/viewer';
 import { ViewerService } from '../../services/viewer.service';
@@ -37,7 +37,7 @@ export class CommentsComponent implements OnInit {
         this.loadComments();
     }
 
-    private loadComments(): void {
+    public loadComments(): void {
         this.commentService
             .getCommentsByPaperId(this.paper.id)
             .pipe(
@@ -76,4 +76,5 @@ export class CommentsComponent implements OnInit {
             () => this.loadComments(),
         );
     }
+
 }

@@ -9,3 +9,10 @@ export interface Comment {
   dateOfUpdate: Date;
   viewer: Viewer;
 }
+
+export interface CommentsLikesTracking {
+    id: number;
+    comment: Comment;
+    viewer: Viewer;
+    liked: boolean;
+}

@@ -22,6 +22,7 @@ import { LoginComponent } from './components/login/login.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ErrorComponent } from './components/error/error.component';
+import { CommentComponent } from './components/comments/comment/comment.component';
 
 @NgModule({
     declarations: [
@@ -40,6 +41,7 @@ import { ErrorComponent } from './components/error/error.component';
         RegisterComponent,
         LoginComponent,
         ErrorComponent,
+        CommentComponent,
     ],
     imports: [
         BrowserModule,
